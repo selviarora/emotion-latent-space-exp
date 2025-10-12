@@ -1,7 +1,7 @@
 import numpy as np
 
-happy = np.load("../embeddings/happy/actor01_layer3_energy_trim.npy")
-angry = np.load("../embeddings/angry/actor01_layer3_energy_trim.npy")
+happy = np.load("embeddings/actor04/happy_layer5.npy")
+angry = np.load("embeddings/actor04/angry_layer5.npy")
 
 def cosine_similarity(a, b):
     a = a / (np.linalg.norm(a) + 1e-9)
