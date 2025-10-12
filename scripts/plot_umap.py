@@ -4,16 +4,17 @@ from transformers import Wav2Vec2FeatureExtractor, Wav2Vec2Model
 
 # === Config you can change ===================================================
 SR = 16000  # sample rate expected by wav2vec2
-# Folder with your WAVs (Actor_01 only for now):
-ROOT = "/Users/selvi.arora/Desktop/Audio_Speech_Actors_01-24 2/Actor_01"
+# Folder with your WAVs:
+ROOT = "/Users/selvi.arora/Desktop/Audio_Speech_Actors_01-24 2"
+ACTORS = ["Actor_01", "Actor_02", "Actor_03", "Actor_04"]  # which actors to include
 
-# We’ll visualize two emotions: happy(03) and angry(05) in STRONG intensity (..-02-..)
+# We'll visualize two emotions: happy(03) and angry(05) in STRONG intensity (..-02-..)
 EMOTIONS = {"03": "happy", "05": "angry"}
 
 LAYER_IDX = 5     # <- we found Layer 5 gives best emotion separation
 TRIM = True       # remove leading/trailing silence to focus on speech
 POOL = "energy"   # "mean" or "energy" — energy emphasizes emotional frames
-MAX_PER_CLASS = 20  # up to N files per class to keep the plot readable
+MAX_PER_CLASS = 80  # up to N files per class (4 actors × ~20 files each)
 
 # === Pick a reducer: try UMAP, else fallback to t-SNE ========================
 reducer_name = None
@@ -91,14 +92,19 @@ def embed_file(path):
     return emb.cpu().numpy()
 
 # === Collect a small, balanced set of files per class ========================
-files = sorted(glob.glob(os.path.join(ROOT, "*.wav")))
 by_class = {"happy": [], "angry": []}
-for f in files:
-    cls = is_strong_emotion(f, wanted_codes=set(EMOTIONS.keys()))
-    if cls is None:
+for actor in ACTORS:
+    actor_dir = os.path.join(ROOT, actor)
+    if not os.path.exists(actor_dir):
+        print(f"[warn] {actor_dir} not found, skipping")
         continue
-    if len(by_class[cls]) < MAX_PER_CLASS:     # cap to keep plot neat
-        by_class[cls].append(f)
+    files = sorted(glob.glob(os.path.join(actor_dir, "*.wav")))
+    for f in files:
+        cls = is_strong_emotion(f, wanted_codes=set(EMOTIONS.keys()))
+        if cls is None:
+            continue
+        if len(by_class[cls]) < MAX_PER_CLASS:     # cap to keep plot neat
+            by_class[cls].append(f)
 
 print("[info] collected:", {k: len(v) for k, v in by_class.items()})
 assert sum(len(v) for v in by_class.values()) > 1, "Not enough files found."
@@ -181,5 +187,5 @@ plt.title(title)
 plt.xlabel("dim-1"); plt.ylabel("dim-2")
 plt.legend(loc="best", frameon=True)
 plt.tight_layout()
-plt.savefig("../outputs/l5_emotion_umap_centroids.png", dpi=180)
-print("[save] wrote ../outputs/l5_emotion_umap_centroids.png")
+plt.savefig("outputs/l5_emotion_umap_centroids.png", dpi=180)
+print("[save] wrote outputs/l5_emotion_umap_centroids.png")
