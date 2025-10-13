@@ -33,8 +33,8 @@ def main():
         print("Using prosody normalization (z-score)")
     else:
         # Load default if exists
-        default_mean = os.path.join(args.embeddings_dir, "prosody_mean.npy")
-        default_std = os.path.join(args.embeddings_dir, "prosody_std.npy")
+        default_mean = os.path.join(args.embeddings_dir, "stats", "prosody_mean.npy")
+        default_std = os.path.join(args.embeddings_dir, "stats", "prosody_std.npy")
         if os.path.exists(default_mean) and os.path.exists(default_std):
             prosody_mean = np.load(default_mean)
             prosody_std = np.load(default_std)

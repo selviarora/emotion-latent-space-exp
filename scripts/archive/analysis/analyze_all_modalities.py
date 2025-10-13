@@ -95,8 +95,8 @@ def main():
     all_results = {}
     
     # Load prosody normalization
-    prosody_mean = np.load('embeddings/prosody_mean.npy')
-    prosody_std = np.load('embeddings/prosody_std.npy')
+    prosody_mean = np.load('embeddings/stats/prosody_mean.npy')
+    prosody_std = np.load('embeddings/stats/prosody_std.npy')
     
     print("="*70)
     print("COMPARING ALL MODALITIES: Layer5 vs Prosody vs Hybrid")

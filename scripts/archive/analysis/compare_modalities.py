@@ -8,8 +8,8 @@ def cosine(u, v):
 actors = ['actor01', 'actor02', 'actor03', 'actor04']
 
 # Load prosody normalization
-prosody_mean = np.load('embeddings/prosody_mean.npy')
-prosody_std = np.load('embeddings/prosody_std.npy')
+prosody_mean = np.load('embeddings/stats/prosody_mean.npy')
+prosody_std = np.load('embeddings/stats/prosody_std.npy')
 
 print("="*70)
 print("COMPARING: Layer5 only vs Prosody only vs Hybrid")

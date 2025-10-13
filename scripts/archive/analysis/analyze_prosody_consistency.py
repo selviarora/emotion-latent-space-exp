@@ -61,8 +61,8 @@ def main():
     print("  ...")
     
     # Load prosody normalization
-    prosody_mean = np.load('embeddings/prosody_mean.npy')
-    prosody_std = np.load('embeddings/prosody_std.npy')
+    prosody_mean = np.load('embeddings/stats/prosody_mean.npy')
+    prosody_std = np.load('embeddings/stats/prosody_std.npy')
     
     print("\n" + "="*70)
     print("TEST 1: Within-Actor Consistency (by Intensity)")
