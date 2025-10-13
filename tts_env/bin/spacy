@@ -1,0 +1,7 @@
+#!/Users/selvi.arora/emotion_expirement/tts_env/bin/python3.10
+import sys
+from spacy.cli import setup_cli
+if __name__ == '__main__':
+    if sys.argv[0].endswith('.exe'):
+        sys.argv[0] = sys.argv[0][:-4]
+    sys.exit(setup_cli())
