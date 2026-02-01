@@ -1,16 +1,14 @@
-# emotion latent space experiment
+# emotion latent space experiment 
 
 probing wav2vec2's internal layers to see if emotion is an emergent geometric property of its latent space
 
----
-
 ## what is this
 
-so i had this idea - wav2vec2 is trained on raw audio with no labels at all, just self-supervised learning. but when you look at the embeddings it produces... emotional speech clusters together. angry samples end up near other angry samples. calm near calm.
+so i had this idea - wav2vec2 is trained on raw audio with no labels at all, just self-supervised learning. but when you look at the embeddings it produces... emotional speech clusters together! angry samples end up near other angry samples. calm near calm.
 
-which got me thinking: is there a direction in this space that corresponds to emotion? like could you literally just do `embedding + anger_direction` and make speech sound angrier?
+which got me thinking: is there a direction in this space that corresponds to emotion? maybe you could just do `embedding + anger_direction` and make speech sound angrier?
 
-turns out: yes. and it works way better than i expected.
+turns out: yes. and it works way better than i expected!! wohoo 
 
 ## how it works
 
@@ -67,9 +65,3 @@ python tts.py --text "whatever" --ref_calm calm.wav --ref_angry angry.wav --alph
 
 torch, transformers, librosa, soundfile, TTS (coqui), numpy
 
-## todo
-
-- extend to more emotions beyond calm/angry
-- improve audio quality of reconstructions
-- try hubert and wavlm
-- perceptual study
