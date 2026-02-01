@@ -80,7 +80,7 @@ the wav2vec → mel → vocoder approach is fundamentally limited because wav2ve
 - end-to-end emotional TTS - models like StyleTTS2 or VITS trained for this
 - voice conversion models - like OpenVoice that disentangle content from style
 
-so yeah, the axis math is cool and the clustering is real, but turning it into a practical emotion morpher needs a different approach entirely.
+so yeah, the axis math is cool and the clustering is real, but turning it into a practical emotion morpher needs a different approach entirely. 😄
 
 ## dependencies
 
