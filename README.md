@@ -61,7 +61,27 @@ python tts.py --text "whatever" --ref_calm calm.wav --ref_angry angry.wav --alph
 - you can interpolate smoothly along the axis, its not just binary
 - the emotion structure emerges purely from self-supervised pretraining on unlabeled audio
 
+## what didnt work (and why)
+
+i tried to do real-time emotion morphing but hit a wall. after a lot of debugging i realized the problem is fundamental:
+
+**emotions in speech are conveyed through prosody (pitch contour, timing, rhythm) - not spectral content.**
+
+when someone says "i'm fine" angry vs sad:
+- the words/phonemes are identical (same spectral content)
+- the pitch, timing, intensity are different (prosody)
+
+mel spectrograms dont directly encode pitch contour or timing - theyre basically a snapshot of "what frequencies are present." so modifying mels is like trying to change the emotion of a sentence by adjusting an EQ. you can make it brighter or darker, but you cant change *how* it was said.
+
+the wav2vec → mel → vocoder approach is fundamentally limited because wav2vec encodes *what* is said (its designed for speech recognition), not *how* its said emotionally.
+
+**what would actually work:**
+- explicit prosody modeling - predict and modify F0 (pitch), duration, energy separately
+- end-to-end emotional TTS - models like StyleTTS2 or VITS trained for this
+- voice conversion models - like OpenVoice that disentangle content from style
+
+so yeah, the axis math is cool and the clustering is real, but turning it into a practical emotion morpher needs a different approach entirely.
+
 ## dependencies
 
 torch, transformers, librosa, soundfile, TTS (coqui), numpy
-
