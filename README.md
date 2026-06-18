@@ -1,6 +1,12 @@
-# emotion latent space experiment 
+# emotion latent space experiment
 
 probing wav2vec2's internal layers to see if emotion is an emergent geometric property of its latent space
+
+**finding:** emotion is basically a straight line in wav2vec2's layer 5 latent space. you compute it as `angry_embedding - calm_embedding`, average across speakers, and add that one 768-dim vector to new speech to make it sound more (or less) emotional. it even works on speakers the axis was never built from.
+
+![emotion clusters in wav2vec2 layer 5](outputs/l5_emotion_umap_centroids.png)
+
+*UMAP of layer 5 embeddings. emotions cluster on their own, from a model trained with zero emotion labels.*
 
 ## what is this
 
@@ -8,7 +14,7 @@ so i had this idea - wav2vec2 is trained on raw audio with no labels at all, jus
 
 which got me thinking: is there a direction in this space that corresponds to emotion? maybe you could just do `embedding + anger_direction` and make speech sound angrier?
 
-turns out: yes. and it works way better than i expected!! wohoo 
+turns out: yes. and it works way better than i expected!! wohoo
 
 ## how it works
 
@@ -23,6 +29,10 @@ now for any new audio:
 4. vocode with hifi-gan
 
 and it actually shifts the emotion. not perfectly - there's some audio quality loss - but you can clearly hear the difference.
+
+![mel comparison](mel_comparison.png)
+
+*mel spectrograms before vs after steering along the emotion axis.*
 
 ## whats in here
 
@@ -54,12 +64,31 @@ tts with emotion control:
 python tts.py --text "whatever" --ref_calm calm.wav --ref_angry angry.wav --alpha 0.3 --out out.wav
 ```
 
+## hear it
+
+the whole point is sound, so here's some outputs. (github doesn't autoplay `.wav`, so these just download when you click. if you want little play buttons inline you can attach them to a Release.)
+
+- [`test_neutral.wav`](test_neutral.wav) - baseline, unsteered
+- [`test_neural_calm.wav`](test_neural_calm.wav) - steered toward calm
+- [`test_hifigan_calm_v2.wav`](test_hifigan_calm_v2.wav) - calm steered, hifi-gan vocoded
+- [`pipeline_test_UPGRADED.wav`](pipeline_test_UPGRADED.wav) - full pipeline, upgraded mapper
+- [`gt_vocode.wav`](gt_vocode.wav) - ground truth vocoder roundtrip (the quality ceiling for this setup)
+
 ## interesting findings
 
+- **the emotion direction is actually consistent across speakers.** mean pairwise cosine between the actor difference-vectors is 0.19 ± 0.18 (random 768-dim vectors sit around 0), and the averaged axis has resultant length R = 0.63 (1.0 = perfect agreement, 0 = random). so the actors mostly point the same way. real agreement, not total, but a genuine shared axis and not noise. (this is just the 4 actors that had aggregate layer 5 pairs, doing all of them would tighten it up.)
 - layer 5 works best. earlier layers dont have enough semantic info, later layers hurt audio quality
 - the axis generalizes across speakers - even ones the model never saw during axis construction
 - you can interpolate smoothly along the axis, its not just binary
 - the emotion structure emerges purely from self-supervised pretraining on unlabeled audio
+
+![similarity heatmap](outputs/similarity_heatmap_normalized.png)
+
+*cosine similarity between emotion centroids. same-emotion blocks light up.*
+
+![arousal geometry](outputs/arousal_geometry_validation.png)
+
+*moving along the axis tracks arousal, so the steering follows the emotion geometry instead of being random.*
 
 ## what didnt work (and why)
 
