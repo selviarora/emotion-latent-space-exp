@@ -2,7 +2,9 @@
 
 probing wav2vec2's internal layers to see if emotion is an emergent geometric property of its latent space
 
-**finding:** emotion is basically a straight line in wav2vec2's layer 5 latent space. you compute it as `angry_embedding - calm_embedding`, average across speakers, and add that one 768-dim vector to new speech to make it sound more (or less) emotional. it even works on speakers the axis was never built from.
+**finding:** emotion is basically a straight line in wav2vec2's layer 5 latent space. 
+
+you compute it as `angry_embedding - calm_embedding`, average across speakers, and add that one 768-dim vector to new speech to make it sound more (or less) emotional. it even works on speakers the axis was never built from.
 
 ![emotion clusters in wav2vec2 layer 5](outputs/l5_emotion_umap_centroids.png)
 
